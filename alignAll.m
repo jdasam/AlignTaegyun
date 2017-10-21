@@ -1,5 +1,5 @@
 dirData=cell(10,1);
-dirData{1} = '/Users/Da/Documents/MATLAB/Schumann';
+dirData{1} = '/Users/Da/Public/verovioTest/Schumann';
 
 
 
@@ -13,7 +13,7 @@ for N=1: numel(dirData)
 
             fprintf(dirFolder);
             
-            alignFolder_Ver7(dirFolder);
+            alignFolder_VerChromaPy2(dirFolder);
         end
     end
 end
