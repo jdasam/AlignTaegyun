@@ -43,7 +43,7 @@ if ~isfield(option, 'midiGTname') option.midiGTname = '(midi).mid'; end
 if ~isfield(option, 'useMIDI') option.useMIDI = false; end
 if ~isfield(option, 'useChroma') option.useChroma = false; end
 if ~isfield(option, 'sampleRate') option.sampleRate = 100; end
-
+if ~isfield(option, 'saveDropbox') option.saveDropbox = false; end
 
 cd(dirFolder)
 dataSet = getFileListWithExtension(strcat('*.',option.audioExtension));
@@ -197,9 +197,16 @@ for dataIndex = 1 : length(dataSet)
             end
         end
         csvwrite(strcat(fileName,'.csv'), alignOnset);
+        
+
     end
-    
-    
+           
+    if option.saveDropbox
+        dirPiece = strsplit(dirFolder, 'sourceFiles');
+        csvwrite(strcat( '/Users/Da/Dropbox/performScoreDemo', dirPiece(2) ,'/', fileName, '.csv' ),alignOnset);
+    end
+
+
     if option.calError
         midiMatGT = readmidi_java(midiGTname);
         diff = calErrorKTK(midiMat, midiMatGT); 
@@ -242,7 +249,15 @@ for dataIndex = 1 : length(dataSet)
 
         saveName = strcat(fileName, '.mid');
         writemidi_seconds(midiMat, saveName);
+        
+        if option.saveDropbox
+            dirPiece = strsplit(dirFolder, 'sourceFiles');
+            writemidi_seconds(midiMat, strcat( '/Users/Da/Dropbox/performScoreDemo', dirPiece(2) ,'/', saveName ));
+        end
     end
+    
+    
+
 
     
 end

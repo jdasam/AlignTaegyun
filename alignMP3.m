@@ -20,12 +20,15 @@ if exist(dirScoreAudio,'file');
         load(fileNameScoreFBR);
     else
         scoreFBR=prepareAudio(dirScoreAudio,sampleRate);
+
         save(fileNameScoreFBR,'scoreFBR');
     end
 else
     msg='No midi.mp3 file';
     error(msg);
 end
+        hold off
+        imagesc(scoreFBR);
 
 % read midi.mid
 dirMidi = '(midi).mid';
@@ -63,13 +66,20 @@ N=2;
         save(fileNameTargetFBR,'targetFBR');
     end
     
+    figure();
+    imagesc(targetFBR);
+    
     % compute cosine Similarirty
     fileNameDTWPath=strcat(tempName,'-DTW.mat');
     if exist(fileNameDTWPath,'file');
         load(fileNameDTWPath);
     else
         cosineSimilarity=simmx(scoreFBR+1e-8,targetFBR+1e-8);
+        figure();
+        imagesc(cosineSimilarity)
         [p,q,~,cost] = dpfast(1-cosineSimilarity);
+        hold on
+        plot(q,p,'r');
         save(fileNameDTWPath,'p','q','cost');
     end;
     
@@ -88,7 +98,7 @@ N=2;
     calculateTime(N).time=toc;
     N=N+1;
 
-calculateTime(2).time;    
+calculateTime(2).time    
 dirTime=strcat(tempName,'-time.mat');
 save(dirTime, 'calculateTime');
 end        
