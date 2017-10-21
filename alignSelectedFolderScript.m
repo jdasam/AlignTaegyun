@@ -25,7 +25,11 @@ basicParameter = getDynamicRange('/Users/Da/Documents/MATLAB/midiVelocityGit/BdR
 for N=1: numel(dirData)
 
     dirFolder=dirData{N};
-
+    
+    dirPiece = strsplit(dirFolder, 'sourceFiles');
+    mkdir(strcat( '/Users/Da/Dropbox/performScoreDemo', dirPiece{2}))
+    
+    
     fprintf(dirFolder);
 
     alignFolder_VerChromaPy2(dirFolder,option);

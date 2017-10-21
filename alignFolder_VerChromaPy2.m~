@@ -252,7 +252,7 @@ for dataIndex = 1 : length(dataSet)
         
         if option.saveDropbox
             dirPiece = strsplit(dirFolder, 'sourceFiles');
-            writemidi_seconds(midiMat, strcat( '/Users/Da/Dropbox/performScoreDemo', dirPiece{2} ,'/', saveName ));
+            writemidi_seconds(midiMat, strcat( '/Users/Da/Dropbox/performScoreDemo', dirPiece(2) ,'/', saveName ));
         end
     end
     
