@@ -37,6 +37,7 @@ for N=1: numel(dirData)
 
 %     dirPiece = strsplit(dirFolder, 'sourceFiles');
 %     mkdir(strcat( '/Users/Da/Dropbox/performScoreDemo', dirPiece{2}))
+
     
     fprintf(dirFolder);
 
