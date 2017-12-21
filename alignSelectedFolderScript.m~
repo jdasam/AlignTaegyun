@@ -12,8 +12,7 @@ dirData=cell(11,1);
 % dirData{11} = '/Users/Da/Public/verovioTest/sourceFiles/Beethoven Piano Sonata No./23-3';
 % dirData{1} = '/Users/Da/Public/verovioTest/sourceFiles/Brahms Intermezzo op. 118 No./2';
 
-% dirData{1} = '/Users/Da/Documents/MATLAB/smd_score_pair';
-dirData{1} = '/Users/Da/Music/sourceFiles/mozart fantasia';
+dirData{1} = '/Users/Da/Documents/MATLAB/smd_score_pair';
 
 option = [];
 option.saveMIDI = false;

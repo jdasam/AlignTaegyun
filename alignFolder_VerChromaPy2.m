@@ -24,12 +24,13 @@ if nargin<2
     option.audioToAudio = false;
     option.calError = false;
     option.audioExtension = 'wav';
-    option.audioGTname = 'simonRattle.wav';
-    option.midiName = '(midi).mid';
-    option.midiAdditionalName = '_sync.mid';
+    option.audioGTname = 'midi.mp3';
+    option.midiGTname = '(midi).mid';
+    option.midiAdditionalName = '_sync';
     option.useMIDI = false; 
     option.useChroma = false;
     option.sampleRate = 100;
+    option.dataMatchType = 'multipleRecording';
 end
 
 
@@ -37,13 +38,15 @@ if ~isfield(option, 'saveMIDI') option.saveMIDI = false; end
 if ~isfield(option, 'audioToAudio') option.audioToAudio = false; end
 if ~isfield(option, 'calError') option.calError = false; end
 if ~isfield(option, 'audioExtension') option.audioExtension = 'wav'; end
-if ~isfield(option, 'audioGTname') option.audioGTname = 'GT.wav'; end
-if ~isfield(option, 'midiAdditionalName') option.midiAdditionalName = '_sync.mid'; end
+if ~isfield(option, 'audioGTname') option.audioGTname = 'midi.mp3'; end
+if ~isfield(option, 'midiAdditionalName') option.midiAdditionalName = '_sync'; end
 if ~isfield(option, 'midiGTname') option.midiGTname = '(midi).mid'; end
 if ~isfield(option, 'useMIDI') option.useMIDI = false; end
 if ~isfield(option, 'useChroma') option.useChroma = false; end
 if ~isfield(option, 'sampleRate') option.sampleRate = 100; end
 if ~isfield(option, 'saveDropbox') option.saveDropbox = false; end
+if ~isfield(option, 'dataMatchType') option.dataMatchType = 'multipleRecording'; end
+
 
 cd(dirFolder)
 dataSet = getFileListWithExtension(strcat('*.',option.audioExtension));
@@ -82,6 +85,13 @@ for dataIndex = 1 : length(dataSet)
         end
     end
     
+    if option.saveMIDI
+        midiName = strcat(fileName, option.midiAdditionalName , '.mid');
+        if exist(midiName, 'file');
+            continue
+        end
+    end
+    
 %     if strcmp(fileName, 'Chopin_op38_p01')
 %         continue
 %     end
@@ -94,9 +104,20 @@ for dataIndex = 1 : length(dataSet)
 %         continue
 %     end
 
+    
+
     audioName = strcat(fileName,'.' , option.audioExtension);
-    audioGTname = option.audioGTname;
-    midiGTname = option.midiGTname;
+    
+    if strcmp(option.dataMatchType, 'multipleRecording')
+        audioGTname = option.audioGTname;
+        midiGTname = option.midiGTname;
+    elseif strcmp(option.dataMatchType, 'onePair')
+        if length(strsplit(fileName, option.audioGTname)) >1
+            continue
+        end
+        audioGTname = strcat(fileName, option.audioGTname, '.', option.audioExtension);
+        midiGTname = strcat(fileName, option.midiGTname, '.mid');
+    end
 %     midiName = strcat(fileName, option.midiAdditionalName);
 
 %     audioGTname = strcat({'- '}, fileName, '.mid_note_st.wav');
@@ -138,7 +159,7 @@ for dataIndex = 1 : length(dataSet)
 
         [~,~,b_onset] = onsetDetection(scoreFBR+eps, option.sampleRate, paramCLP);
 
-        if useChroma
+        if option.useChroma
             b = pitch_to_chroma(scoreFBR,paramCLP);
         else
             b = scoreFBR(21:108,:);
@@ -203,7 +224,7 @@ for dataIndex = 1 : length(dataSet)
            
     if option.saveDropbox
         dirPiece = strsplit(dirFolder, 'sourceFiles');
-        csvwrite(strcat( '/Users/Da/Dropbox/performScoreDemo', dirPiece(2) ,'/', fileName, '.csv' ),alignOnset);
+        csvwrite(strcat( '/Users/Da/Dropbox/performScoreDemo', dirPiece{2} ,'/', fileName, '.csv' ),alignOnset);
     end
 
 
@@ -247,12 +268,12 @@ for dataIndex = 1 : length(dataSet)
         midiMat(:,7) = midiMat(:,7) - midiMat(:,6);
         midiMat(midiMat(:,7)<=0, 7) = 0.1;
 
-        saveName = strcat(fileName, '.mid');
+        saveName = strcat(fileName, option.midiAdditionalName,'.mid');
         writemidi_seconds(midiMat, saveName);
         
         if option.saveDropbox
             dirPiece = strsplit(dirFolder, 'sourceFiles');
-            writemidi_seconds(midiMat, strcat( '/Users/Da/Dropbox/performScoreDemo', dirPiece(2) ,'/', saveName ));
+            writemidi_seconds(midiMat, strcat( '/Users/Da/Dropbox/performScoreDemo', dirPiece{2} ,'/', saveName ));
         end
     end
     
